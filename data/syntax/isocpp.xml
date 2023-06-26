@@ -515,6 +515,8 @@
         <AnyChar attribute="Decimal" context="Integer" String="0123456789" lookAhead="true" />
         <keyword attribute="Keyword" context="AttributeNamespace" String="using" />
         <IncludeRules context="DetectGccAttributes##GCCExtensions" />
+        <!-- Match exposition-only names -->
+        <RegExpr attribute="Ignore" context="#stay" String="\$[\w\-\s]*?\$" />
         <DetectIdentifier />
       </context>
 
