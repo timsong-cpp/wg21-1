@@ -396,10 +396,28 @@ def divspan(elem, doc):
     if 'sref' in elem.classes and isinstance(elem, pf.Span):
         target = pf.stringify(elem)
         number = stable_names.get(target)
+        
+        prefix = target.split(sep=':')[0]
+        # If this is a table, figure, or equation, needs a bit of special handling.
+        
+        # Equations don't have their own pages so link to the parent. 
+        # This assumes that eq:meow's parent is meow, which is true so far but might change...
+        linktarget = f'{target[3:]}#{target}' if prefix == 'eq' else target
+          
         link = pf.Link(
             pf.Str('[{}]'.format(target)),
-            url='https://wg21.link/{}'.format(target))
+            url='https://eel.is/c++draft/{}'.format(linktarget))
+
+        prefixmap = {
+          'tab' : 'Table',
+          'fig' : 'Figure',
+          'eq'  : 'Equation'
+        }
+
         if number is not None:
+            numprefix = prefixmap.get(prefix)
+            if numprefix is not None:
+              number = f'{numprefix} {number}'
             return pf.Span(pf.Str(number), pf.Space(), link)
         else:
             pf.debug('mpark/wg21: stable name', target, 'not found')
