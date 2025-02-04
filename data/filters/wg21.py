@@ -7,7 +7,7 @@ import panflute as pf
 import re
 
 embedded_md = re.compile('@@(.*?)@@|@(.*?)@')
-expos_name = re.compile('\$([\w\-\s]*?)\$')
+expos_name = re.compile(r'\$([\w\-\s]*?)\$')
 stable_names = {}
 current_pnum = {}
 current_note = 0
@@ -396,14 +396,14 @@ def divspan(elem, doc):
     if 'sref' in elem.classes and isinstance(elem, pf.Span):
         target = pf.stringify(elem)
         number = stable_names.get(target)
-        
+
         prefix = target.split(sep=':')[0]
         # If this is a table, figure, or equation, needs a bit of special handling.
-        
-        # Equations don't have their own pages so link to the parent. 
+
+        # Equations don't have their own pages so link to the parent.
         # This assumes that eq:meow's parent is meow, which is true so far but might change...
         linktarget = f'{target[3:]}#{target}' if prefix == 'eq' else target
-          
+
         link = pf.Link(
             pf.Str('[{}]'.format(target)),
             url='https://eel.is/c++draft/{}'.format(linktarget))
